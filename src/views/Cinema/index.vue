@@ -33,7 +33,8 @@ export default {
         Header,
         TabBar,
         CiList
-    }, methods: {
+    }, 
+    methods: {
         handleScroll () {
         var top = 50
         if (document.documentElement.scrollTop >= top) {
@@ -43,8 +44,9 @@ export default {
         }
         }
     },
-    mounted () {
+    activated () {
         window.onscroll = this.handleScroll
+        
     }
 }
 </script>
