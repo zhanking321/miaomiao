@@ -46,16 +46,16 @@ export default {
         window.onscroll = this.handleScroll
         setTimeout(() => {
             var cityName = localStorage.getItem("nowNm")
+            if(cityName == '深圳') {return}
             messageBox({
                 title: "定位",
-                content: cityName,
+                content: "深圳",
                 cancel: "取消",
                 ok: "切换定位",
-                handleCancel(){
-                    console.log(1)
-                },
                 handleOk(){
-                    console.log(2)
+                    localStorage.setItem("nowNm", "深圳")
+                    localStorage.setItem("nowId", 440300)
+                    window.location.reload()
                 },
             })
         }, 2000)
