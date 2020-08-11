@@ -1,22 +1,27 @@
 <template>
-<div class="cbody">
-				<div class="city_list">
-					<div class="city_hot">
-						<h2>热门城市</h2>
-						<ul class="clearfix">
-							<li v-for="data in datalist.hotlist" :key="data.cityId">
-								{{data.name}}
-							</li>
-						</ul>
-					</div>
-					<div class="city_sort" ref="city_sort">
-						<div v-for="item in datalist.newlist" :key="item.index">
-							<h2>{{ item.index }}</h2>
-							<ul>
-								<li v-for="data in item.list" :key="data.cityId">{{ data.name }}</li>
+	<div class="cbody">
+				<loading v-if="isLoading"></loading>
+				<div v-else class="city_list">
+					<scroller ref="city_list">
+					<div>
+						<div class="city_hot">
+							<h2>热门城市</h2>
+							<ul class="clearfix">
+								<li v-for="data in datalist.hotlist" :key="data.cityId" @tap="handleToCity(data.name, data.cityId)">
+									{{data.name}}
+								</li>
 							</ul>
 						</div>
+						<div class="city_sort" ref="city_sort">
+							<div v-for="item in datalist.newlist" :key="item.index">
+								<h2>{{ item.index }}</h2>
+								<ul>
+									<li v-for="data in item.list" :key="data.cityId" @tap="handleToCity(data.name, data.cityId)">{{ data.name }}</li>
+								</ul>
+							</div>
+						</div>
 					</div>
+					</scroller>
 				</div>
 				<div class="city_index">
 					<ul>
@@ -32,14 +37,21 @@ export default {
 	name: 'city',
 	data () {
 		return {
-			datalist: {newlist:[], hotlist:[]}
+			datalist: {newlist:[], hotlist:[]},
+			isLoading: true
 		}
 	},
 	methods: {
 		handleIndex (index) {
 			var h2 = this.$refs.city_sort.getElementsByTagName('h2')
-			this.$refs.city_sort.parentNode.scrollTop = h2[index].offsetTop
-			console.log(this.$refs.city_sort.parentNode.scrollTop)
+			// this.$refs.city_sort.parentNode.scrollTop = h2[index].offsetTop
+			this.$refs.city_list.toScrollTop(-h2[index].offsetTop)
+		},
+		handleToCity (name, cityId) {
+			this.$store.commit('CITY_INFO',{name, cityId})
+			localStorage.setItem('nowNm', name)
+			localStorage.setItem('nowId', cityId)
+			this.$router.push('/movie/nowPlaying')
 		},
 		handleCity (citylist) {
 			var letters = []
@@ -63,21 +75,34 @@ export default {
 			}
 	},
 	mounted () {
-		this.axios({
-			url: 'https://m.maizuo.com/gateway?k=8030594',
-			headers: {
-				'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1596859969114795885887490","bc":"440300"}',
-				'X-Host': 'mall.film-ticket.city.list'
-			}
-			}).then(res => {
-			this.datalist = this.handleCity(res.data.data.cities)
+		var cityList = localStorage.getItem('cityList')
+		var hotList = localStorage.getItem('hotList')
+		if(cityList && hotList){
+			this.datalist.newlist = JSON.parse(cityList)
+			this.datalist.hotlist = JSON.parse(hotList)
 			console.log(this.datalist)
-			})
+			this.isLoading = false
+		}else{ 
+			this.axios({
+				url: 'https://m.maizuo.com/gateway?k=8030594',
+				headers: {
+					'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1596859969114795885887490","bc":"440300"}',
+					'X-Host': 'mall.film-ticket.city.list'
+				}
+				}).then(res => {
+					this.datalist = this.handleCity(res.data.data.cities)
+					// console.log(this.datalist)
+					localStorage.setItem("cityList", JSON.stringify(this.datalist.newlist))
+					localStorage.setItem("hotList", JSON.stringify(this.datalist.hotlist) )
+					this.isLoading = false
+				})
+
+		}
 	}
 }
 </script>
 <style scoped>
-#content .cbody{ margin-top: 45px;  display: flex; width:100%; position: relative; top: -20px; bottom: 0px; height: 460px;}
+#content .cbody{ margin-top: 20px;  display: flex; width:100%; position: relative; top: -20px; bottom: 0px; height: 490px;}
 .cbody .city_list{ flex:1; overflow: auto; background: #FFF5F0;}
 .cbody .city_list::-webkit-scrollbar{
     background-color:transparent;

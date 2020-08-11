@@ -4,7 +4,7 @@
         <div id="content" >
             <div class="movie_menu" :class="isFixed? 'fixed2' : ''">
                     <router-link class="city_name" tag='div' to='/movie/city' activeClass='active'>
-                        <span>大连</span><i class="iconfont icon-lower-triangle"></i>
+                        <span>{{$store.state.city.name}}</span><i class="iconfont icon-lower-triangle"></i>
                     </router-link>
                     <div class="hot_swtich">
                         <router-link class="hot_item" tag='div' activeClass="active" to='/movie/nowPlaying'>正在热映</router-link>
@@ -24,6 +24,7 @@
 <script>
 import Header from '@/components/Header'
 import TabBar from '@/components/TabBar'
+import { messageBox } from '@/components/JS'
 export default {
     name: 'movie',
     data () {
@@ -36,14 +37,29 @@ export default {
         var top = 50
         if (document.documentElement.scrollTop >= top) {
             this.isFixed = true
-            console.log('haha')
         } else {
             this.isFixed = false
         }
         }
     },
-    mounted () {
+    activated () {
         window.onscroll = this.handleScroll
+        setTimeout(() => {
+            var cityName = localStorage.getItem("nowNm")
+            messageBox({
+                title: "定位",
+                content: cityName,
+                cancel: "取消",
+                ok: "切换定位",
+                handleCancel(){
+                    console.log(1)
+                },
+                handleOk(){
+                    console.log(2)
+                },
+            })
+        }, 2000)
+        
     },
     components: {
         Header,

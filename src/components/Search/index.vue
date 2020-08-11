@@ -43,8 +43,9 @@ export default {
 		//	防抖策略,频繁请求的时候只执行最后一次
 		msg(newVal){
 			var that = this
+			var cityId = this.$store.state.city.cityId
 			this.cancelRequest()
-			this.axios.get(`/ajax/search?kw=${newVal}&cityId=546&stype=-1`,{
+			this.axios.get(`/ajax/search?kw=${newVal}&cityId=${cityId}&stype=-1`,{
 				cancelToken: new this.axios.CancelToken(function(c){
 					that.source = c;
 				})

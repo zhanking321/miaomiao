@@ -1,5 +1,7 @@
 <template>
     <div class="movie_body">
+		<loading v-if="isLoading"></loading>
+		<scroller v-else>
 				<ul>
 					<li v-for="item in datalist" :key="item.filmId">
 						<div class="pic_show"><img :src="item.poster"></div>
@@ -14,7 +16,8 @@
 						</div>
 					</li>
 				</ul>
-			</div>
+		</scroller>
+	</div>
 </template>
 <script>
 import Vue from 'vue'
@@ -25,10 +28,15 @@ export default {
 	name: 'comingsoon',
 	data () {
 		return {
-			datalist: []
+			datalist: [],
+			isLoading: true,
+			preCityId: -1
 		}
 	},
-	mounted () {
+	activated () {
+		var cityId = this.$store.state.city.cityId
+		if(cityId == this.preCityId) {return}
+		this.isLoading = true
 		this.axios({
 			url: 'https://m.maizuo.com/gateway?cityId=440300&pageNum=1&pageSize=10&type=2&k=1216464',
 			headers: {
@@ -37,13 +45,15 @@ export default {
 			}
 		}).then(res => {
 			this.datalist = res.data.data.films
-			console.log(this.datalist)
+			this.isLoading = false
+			this.preCityId = cityId
+			console.log(cityId)
 		})
 	},
 }
 </script>
 <style scoped>
-#content .movie_body{ flex:1; overflow:auto;}
+#content .movie_body{  overflow:auto; height: 600px;}
 .movie_body ul{ margin:0 12px; overflow: hidden;}
 .movie_body ul li{ margin-top:12px; display: flex; align-items:center; border-bottom: 1px #e6e6e6 solid; padding-bottom: 10px;}
 .movie_body .pic_show{ width:64px; height: 90px;}
