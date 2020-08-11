@@ -1,97 +1,13 @@
 <template>
     <div class="movie_body">
 				<ul>
-					<li>
-						<div class="pic_show"><img src="/images/movie_1.jpg"></div>
+					<li v-for="item in datalist" :key="item.filmId">
+						<div class="pic_show"><img :src="item.poster"></div>
 						<div class="info_list">
-							<h2>无名之辈</h2>
-							<p><span class="person">17746</span> 人想看</p>
-							<p>主演: 陈建斌,任素汐,潘斌龙</p>
-							<p>2018-11-30上映</p>
-						</div>
-						<div class="btn_pre">
-							预售
-						</div>
-					</li>
-					<li>
-						<div class="pic_show"><img src="/images/movie_2.jpg"></div>
-						<div class="info_list">
-							<h2>毒液：致命守护者</h2>
-							<p><span class="person">2346</span> 人想看</p>
-							<p>主演: 汤姆·哈迪,米歇尔·威廉姆斯,里兹·阿迈德</p>
-							<p>2018-11-30上映</p>
-						</div>
-						<div class="btn_pre">
-							预售
-						</div>
-					</li>
-					<li>
-						<div class="pic_show"><img src="/images/movie_1.jpg"></div>
-						<div class="info_list">
-							<h2>无名之辈</h2>
-							<p><span class="person">17746</span> 人想看</p>
-							<p>主演: 陈建斌,任素汐,潘斌龙</p>
-							<p>2018-11-30上映</p>
-						</div>
-						<div class="btn_pre">
-							预售
-						</div>
-					</li>
-					<li>
-						<div class="pic_show"><img src="/images/movie_2.jpg"></div>
-						<div class="info_list">
-							<h2>毒液：致命守护者</h2>
-							<p><span class="person">2346</span> 人想看</p>
-							<p>主演: 汤姆·哈迪,米歇尔·威廉姆斯,里兹·阿迈德</p>
-							<p>2018-11-30上映</p>
-						</div>
-						<div class="btn_pre">
-							预售
-						</div>
-					</li>
-					<li>
-						<div class="pic_show"><img src="/images/movie_1.jpg"></div>
-						<div class="info_list">
-							<h2>无名之辈</h2>
-							<p><span class="person">17746</span> 人想看</p>
-							<p>主演: 陈建斌,任素汐,潘斌龙</p>
-							<p>2018-11-30上映</p>
-						</div>
-						<div class="btn_pre">
-							预售
-						</div>
-					</li>
-					<li>
-						<div class="pic_show"><img src="/images/movie_2.jpg"></div>
-						<div class="info_list">
-							<h2>毒液：致命守护者</h2>
-							<p><span class="person">2346</span> 人想看</p>
-							<p>主演: 汤姆·哈迪,米歇尔·威廉姆斯,里兹·阿迈德</p>
-							<p>2018-11-30上映</p>
-						</div>
-						<div class="btn_pre">
-							预售
-						</div>
-					</li>
-					<li>
-						<div class="pic_show"><img src="/images/movie_1.jpg"></div>
-						<div class="info_list">
-							<h2>无名之辈</h2>
-							<p><span class="person">17746</span> 人想看</p>
-							<p>主演: 陈建斌,任素汐,潘斌龙</p>
-							<p>2018-11-30上映</p>
-						</div>
-						<div class="btn_pre">
-							预售
-						</div>
-					</li>
-					<li>
-						<div class="pic_show"><img src="/images/movie_2.jpg"></div>
-						<div class="info_list">
-							<h2>毒液：致命守护者</h2>
-							<p><span class="person">2346</span> 人想看</p>
-							<p>主演: 汤姆·哈迪,米歇尔·威廉姆斯,里兹·阿迈德</p>
-							<p>2018-11-30上映</p>
+							<h2>{{item.name}}  <img v-if="item.filmType.value == 2" src="@/assets/maxs.png"></h2>
+							<p><span class="person">{{ item.filmId}}</span> 人想看</p>
+							<p>主演: {{ item.actors | actorFilter}}</p>
+							<p>类型：{{ item.category}}</p>
 						</div>
 						<div class="btn_pre">
 							预售
@@ -101,8 +17,29 @@
 			</div>
 </template>
 <script>
+import Vue from 'vue'
+Vue.filter ('actorFilter', function(data) {
+	return data.map(item => item.name).join(" ")
+})
 export default {
-    name: 'comingsoon'
+	name: 'comingsoon',
+	data () {
+		return {
+			datalist: []
+		}
+	},
+	mounted () {
+		this.axios({
+			url: 'https://m.maizuo.com/gateway?cityId=440300&pageNum=1&pageSize=10&type=2&k=1216464',
+			headers: {
+			'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1596859969114795885887490","bc":"440300"}',
+			'X-Host': 'mall.film-ticket.film.list'
+			}
+		}).then(res => {
+			this.datalist = res.data.data.films
+			console.log(this.datalist)
+		})
+	},
 }
 </script>
 <style scoped>

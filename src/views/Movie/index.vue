@@ -1,8 +1,8 @@
 <template>
     <div id="main">
         <Header title="喵喵电影"></Header>
-        <div id="content">
-            <div class="movie_menu">
+        <div id="content" >
+            <div class="movie_menu" :class="isFixed? 'fixed2' : ''">
                     <router-link class="city_name" tag='div' to='/movie/city' activeClass='active'>
                         <span>大连</span><i class="iconfont icon-lower-triangle"></i>
                     </router-link>
@@ -26,6 +26,25 @@ import Header from '@/components/Header'
 import TabBar from '@/components/TabBar'
 export default {
     name: 'movie',
+    data () {
+        return {
+            isFixed: false
+        }
+    },
+    methods: {
+        handleScroll () {
+        var top = 50
+        if (document.documentElement.scrollTop >= top) {
+            this.isFixed = true
+            console.log('haha')
+        } else {
+            this.isFixed = false
+        }
+        }
+    },
+    mounted () {
+        window.onscroll = this.handleScroll
+    },
     components: {
         Header,
         TabBar
@@ -43,4 +62,5 @@ export default {
 .movie_menu .search_entry.active{ color: #ef4238; border-bottom: 2px #ef4238 solid;}
 .movie_menu .search_entry i{  font-size:24px; color:red;}
 .active{ color: #ef4238; border-bottom: 2px #ef4238 solid;}
+.fixed2{ position: fixed; top: 0; left: 0;}
 </style>
