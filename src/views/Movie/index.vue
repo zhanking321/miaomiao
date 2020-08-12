@@ -1,6 +1,6 @@
 <template>
     <div id="main">
-        <Header title="喵喵电影"></Header>
+        <Header title="詹氏电影"></Header>
         <div id="content" >
             <div class="movie_menu" :class="isFixed? 'fixed2' : ''">
                     <router-link class="city_name" tag='div' to='/movie/city' activeClass='active'>
@@ -19,6 +19,7 @@
             </keep-alive>
         </div>
         <TabBar></TabBar>
+        <router-view name="detail"></router-view>
     </div>
 </template>
 <script>
@@ -42,7 +43,7 @@ export default {
         }
         }
     },
-    activated () {
+    mounted () {
         window.onscroll = this.handleScroll
         setTimeout(() => {
             var cityName = localStorage.getItem("nowNm")

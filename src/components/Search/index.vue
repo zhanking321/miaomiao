@@ -51,7 +51,7 @@ export default {
 				})
 			}).then((res)=>{
 					var movies = res.data.movies.list
-					if(movielist){
+					if(movies){
 						this.movielist = movies
 						console.log(this.movielist)
 					}

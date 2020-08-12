@@ -4,9 +4,9 @@
 		<scroller v-else>
 				<ul>
 					<li v-for="item in datalist" :key="item.filmId">
-						<div class="pic_show"><img :src="item.poster"></div>
+						<div class="pic_show" @tap='handleTab(item.filmId)'><img :src="item.poster"></div>
 						<div class="info_list">
-							<h2>{{item.name}}  <img v-if="item.filmType.value == 2" src="@/assets/maxs.png"></h2>
+							<h2 @tap='handleTab(item.filmId)'>{{item.name}}  <img v-if="item.filmType.value == 2" src="@/assets/maxs.png"></h2>
 							<p><span class="person">{{ item.filmId}}</span> 人想看</p>
 							<p>主演: {{ item.actors | actorFilter}}</p>
 							<p>类型：{{ item.category}}</p>
@@ -33,12 +33,17 @@ export default {
 			preCityId: -1
 		}
 	},
+	methods: {
+		handleTab(filmId){
+			this.$router.push("/movie/detail/2/"+filmId)
+		},
+	},
 	activated () {
 		var cityId = this.$store.state.city.cityId
 		if(cityId == this.preCityId) {return}
 		this.isLoading = true
 		this.axios({
-			url: 'https://m.maizuo.com/gateway?cityId=440300&pageNum=1&pageSize=10&type=2&k=1216464',
+			url: `https://m.maizuo.com/gateway?cityId=${cityId}&pageNum=1&pageSize=10&type=2&k=1216464`,
 			headers: {
 			'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1596859969114795885887490","bc":"440300"}',
 			'X-Host': 'mall.film-ticket.film.list'
