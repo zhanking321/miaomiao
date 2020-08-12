@@ -22,6 +22,26 @@ export default {
             component: () => import('@/components/ComingSoon'),
         },
         {
+            path: 'detail/1/:id',
+            components: {
+                default: () => import('@/components/NowPlaying'),
+                detail : () => import('@/views/Movie/detail') //    只渲染到name=detail的router-view
+            },
+            props: {
+                detail: true
+            }
+        },
+        {
+            path: 'detail/2/:id',
+            components: {
+                default: () => import('@/components/ComingSoon'),
+                detail : () => import('@/views/Movie/detail') //    只渲染到name=detail的router-view
+            },
+            props: {
+                detail: true
+            }
+        },
+        {
             path: '',
             redirect: '/movie/nowPlaying'
         }

@@ -5,9 +5,9 @@
 				<ul>
 					<li class="pullDown">{{pullDownMsg}}</li>
 					<li v-for="data in datalist" :key="data.filmId">
-						<div class="pic_show" @tap='handleTab()'><img :src="data.poster"></div>
+						<div class="pic_show" @tap='handleTab(data.filmId)'><img :src="data.poster"></div>
 						<div class="info_list">
-							<h2>{{data.name}} <img v-if="data.filmType.value == 2" src="@/assets/maxs.png"> </h2>
+							<h2 @tap='handleTab(data.filmId)'>{{data.name}} <img v-if="data.filmType.value == 2" src="@/assets/maxs.png"> </h2>
 							<p v-if="data.grade">观众评分 <span class="grade">{{data.grade}}</span></p>
 							<p v-else>暂无评分</p>
 							<p>主演: {{ data.actors | actorFilter}}</p>
@@ -37,8 +37,8 @@ export default {
 		}
 	},
 	methods: {
-		handleTab(){
-			console.log("aaa")	
+		handleTab(filmId){
+			this.$router.push("/movie/detail/1/"+filmId)
 		},
 		handleToScroll(pos){
 			if(pos.y > 10){

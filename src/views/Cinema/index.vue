@@ -1,6 +1,6 @@
 <template>
     <div id="main">
-        <Header title="喵喵影院"></Header>
+        <Header title="詹氏影院"></Header>
         <div id="content">
 			<div class="cinema_menu" :class="isFixed? 'fixed' : ''">
 				<div class="city_switch">
